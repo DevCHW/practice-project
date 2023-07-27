@@ -14,7 +14,7 @@ public class Post {
 
     private String content;
 
-    private User userId;
+    private User user;
 
 
     // 임시 Set

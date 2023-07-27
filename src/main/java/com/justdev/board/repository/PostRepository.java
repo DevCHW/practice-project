@@ -12,5 +12,8 @@ public interface PostRepository {
 
     List<Post> findAll();
 
+    Long deleteById(Long id);
+
     void clearStore();
+
 }

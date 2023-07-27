@@ -17,7 +17,7 @@ public class PostService {
     /**
      * 글 작성
      */
-    public Long create(Post post) {
+    public Long write(Post post) {
         // 같은 이름의 중복 회원X
         postRepository.save(post);
         return post.getId();
@@ -33,7 +33,15 @@ public class PostService {
     /**
      * 한 명의 회원 조회
      */
-    public Optional<Post> findOne(Long memberId) {
-        return postRepository.findById(memberId);
+    public Optional<Post> findOne(Long id) {
+        return postRepository.findById(id);
+    }
+
+    /**
+     * 글 삭제
+     */
+    public Long deleteOne(Long id) {
+        postRepository.deleteById(postRepository.findById(id).orElseThrow(RuntimeException::new).getId());
+        return id;
     }
 }
