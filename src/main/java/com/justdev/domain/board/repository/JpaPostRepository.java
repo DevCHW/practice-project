@@ -1,6 +1,6 @@
-package com.justdev.board.repository;
+package com.justdev.domain.board.repository;
 
-import com.justdev.board.entity.Post;
+import com.justdev.entity.Post;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * 순수 JPA Post Repository
  */
-public class JpaPostRepository implements PostRepository {
+public class JpaPostRepository implements PostRepositoryV1 {
 
     @Override
     public Post save(Post post) {

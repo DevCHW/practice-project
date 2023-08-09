@@ -1,35 +1,35 @@
 package com.justdev.board.service;
 
-import com.justdev.board.entity.Post;
-import com.justdev.board.entity.User;
-import com.justdev.board.repository.MemoryPostRepository;
-import com.justdev.board.repository.PostRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.justdev.domain.board.dto.patch.UpdateRequest;
+import com.justdev.domain.board.service.PostService;
+import com.justdev.entity.Post;
+import com.justdev.entity.User;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
+@SpringBootTest
 class PostServiceTest {
 
+    // 메소드 클린을 위해 MemoryPostRepository 클래스의 객체를 생성하고 @AfterEach를 사용함.
+//    PostRepositoryV1 postRepository;
+    @Autowired
     PostService postService;
 
-    // 메소드 클린을 위해 MemoryPostRepository 클래스의 객체를 생성하고 @AfterEach를 사용함.
-    PostRepository postRepository;
+//    @BeforeEach // 테스트를 실행할 때마다 새로운 객체를 생성해준다.
+//    public void beforeEach() {
+//        postService = new PostService(postRepository);
+//    }
 
-    @BeforeEach // 테스트를 실행할 때마다 새로운 객체를 생성해준다.
-    public void beforeEach() {
-        postRepository = new MemoryPostRepository();
-        postService = new PostService(postRepository);
-    }
-
-    @AfterEach // 메소드가 끝날 때마다 동작하게 하는 어노테이션. 이것을 통해 객체를 비워주자.
-    public void afterEach() {
-        postRepository.clearStore();    //객체를 비우는 메소드 clearStore();
-    }
+//    @AfterEach // 메소드가 끝날 때마다 동작하게 하는 어노테이션. 이것을 통해 객체를 비워주자.
+//    public void afterEach() {
+//        postRepository.clearStore();    //객체를 비우는 메소드 clearStore();
+//    }
 
     // == 테스트 시작 == //
 
@@ -66,11 +66,10 @@ class PostServiceTest {
         Post post2 = createPost("test subject2", "test content2", user);
 
         // 저장
-        Long saveId1 = postRepository.save(post1).getId();
-        Long saveId2 = postRepository.save(post2).getId();
+        Long saveId1 = postService.write(post1);
+        Long saveId2 = postService.write(post2);
 
         // when
-        
         // 전체 회원 조회
         List<Post> findPosts = postService.findPosts();
 
@@ -84,13 +83,15 @@ class PostServiceTest {
         User user = createUser("hyunwoo", "test User");
         Post post = createPost("test subject", "test content", user);
 
-        Post savedPost = postRepository.save(post); // 저장
+        Long savedId = postService.write(post); // 저장
 
         // when
-        Post findPost = postService.findOne(savedPost.getId()).get();
+        Post findPost = postService.findOne(savedId).get();
 
         // then
-        assertThat(findPost).isEqualTo(savedPost);
+        assertThat(findPost.getId()).isEqualTo(savedId);
+        assertThat(findPost.getSubject()).isEqualTo("test subject");
+        assertThat(findPost.getContent()).isEqualTo("test content");
     }
 
     @Test
@@ -99,7 +100,7 @@ class PostServiceTest {
         User user = createUser("hyunwoo", "test User");
         Post post = createPost("test subject", "test content", user);
 
-        Long saveId = postRepository.save(post).getId(); // 저장
+        Long saveId = postService.write(post); // 저장
 
         // when
         postService.deleteOne(saveId);  // 삭제
@@ -108,6 +109,31 @@ class PostServiceTest {
         // then
         assertThat(findPost).isEmpty(); //비어있어야 한다.
     }
+    
+    @Test
+    public void 업데이트_성공() throws Exception {
+        // given
+        User user = createUser("hyunwoo", "test User");
+        Post post = createPost("test subject", "test content", user);
+
+        Long savedId = postService.write(post); // 저장
+
+        // when
+        String updateSubject = "updatedSubject";
+        String updateContent = "updatedContent";
+        UpdateRequest request = UpdateRequest.builder()
+                .subject(updateSubject)
+                .content(updateContent)
+                .build();
+
+        Long updatedId = postService.updateOne(savedId, request); //업데이트
+        Post findPost = postService.findOne(updatedId).get();   //조회
+
+        // then
+        assertThat(findPost.getSubject()).isEqualTo(updateSubject); //글 제목이 수정되어있어야 한다.
+        assertThat(findPost.getContent()).isEqualTo(updateContent); //글 내용이 수정되어있어야 한다.
+    }
+    
 
 
     // == 생성 메소드 == //
@@ -123,8 +149,8 @@ class PostServiceTest {
     // Post 생성
     private static Post createPost(String subject, String content, User user) {
         return Post.builder()
-                .subject("test post")
-                .content("test content")
+                .subject(subject)
+                .content(content)
                 .build();
     }
 }

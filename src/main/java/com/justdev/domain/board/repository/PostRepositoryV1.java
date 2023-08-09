@@ -1,10 +1,10 @@
-package com.justdev.board.repository;
+package com.justdev.domain.board.repository;
 
-import com.justdev.board.entity.Post;
+import com.justdev.entity.Post;
 
 import java.util.*;
 
-public interface PostRepository {
+public interface PostRepositoryV1 {
 
     Post save(Post post);
 

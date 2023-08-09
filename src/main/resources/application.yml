@@ -2,3 +2,17 @@ spring:
   output:
     ansi:
       enabled: always
+  datasource:
+    #    Local Configuration
+    url: jdbc:oracle:thin:@localhost:1521:XE
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    username: local_study
+    password: aclass
+  jpa:
+    hibernate:
+      ddl-auto: create #validate
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        #        show_sql: true
+        format_sql: true

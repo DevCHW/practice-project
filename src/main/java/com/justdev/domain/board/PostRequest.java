@@ -1,7 +1,7 @@
-package com.justdev.board;
+package com.justdev.domain.board;
 
-import com.justdev.board.entity.Post;
-import com.justdev.board.entity.User;
+import com.justdev.entity.Post;
+import com.justdev.entity.User;
 import lombok.Getter;
 import lombok.ToString;
 

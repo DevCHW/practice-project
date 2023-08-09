@@ -1,7 +1,8 @@
 package com.justdev.board.repository;
 
-import com.justdev.board.entity.Post;
-import com.justdev.board.entity.User;
+import com.justdev.domain.board.repository.MemoryPostRepository;
+import com.justdev.entity.Post;
+import com.justdev.entity.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

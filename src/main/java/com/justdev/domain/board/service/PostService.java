@@ -1,26 +1,30 @@
-package com.justdev.board.service;
+package com.justdev.domain.board.service;
 
 import java.util.*;
-import com.justdev.board.entity.Post;
-import com.justdev.board.repository.PostRepository;
+
+import com.justdev.domain.board.dto.patch.UpdateRequest;
+import com.justdev.domain.board.repository.PostRepository;
+import com.justdev.entity.Post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PostService {
 
+//    private final PostRepositoryV1 postRepository;
     private final PostRepository postRepository;
 
     /**
      * 글 작성
      */
+    @Transactional
     public Long write(Post post) {
-        // 같은 이름의 중복 회원X
-        postRepository.save(post);
-        return post.getId();
+        return postRepository.save(post).getId();
     }
 
     /**
@@ -40,8 +44,20 @@ public class PostService {
     /**
      * 글 삭제
      */
+    @Transactional
     public Long deleteOne(Long id) {
         postRepository.deleteById(postRepository.findById(id).orElseThrow(RuntimeException::new).getId());
         return id;
+    }
+
+    /**
+     * 글 수정 ()
+     */
+    @Transactional
+    public Long updateOne(Long id, UpdateRequest updateRequest) {
+        Post findPost = postRepository.findById(id).orElseThrow(RuntimeException::new);
+        findPost.change(updateRequest.getSubject()
+                , updateRequest.getContent());
+        return findPost.getId();
     }
 }

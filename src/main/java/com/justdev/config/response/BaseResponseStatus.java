@@ -1,4 +1,4 @@
-package com.justdev.board.config.response;
+package com.justdev.config.response;
 
 
 import lombok.Getter;

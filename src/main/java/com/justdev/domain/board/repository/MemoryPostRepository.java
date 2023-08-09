@@ -1,6 +1,6 @@
-package com.justdev.board.repository;
+package com.justdev.domain.board.repository;
 
-import com.justdev.board.entity.Post;
+import com.justdev.entity.Post;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -9,7 +9,7 @@ import java.util.*;
  * JPA 없이 메모리 Repository 구현
  */
 @Component
-public class MemoryPostRepository implements PostRepository {
+public class MemoryPostRepository implements PostRepositoryV1 {
 
     // 게시글 데이터 저장소
     private static Map<Long, Post> store = new HashMap<>();
@@ -18,9 +18,7 @@ public class MemoryPostRepository implements PostRepository {
     // 게시물 저장
     @Override
     public Post save(Post post) {     // member 객체 안에 name은 저장되어 넘어온 것이라 보면 된다.
-
-        post.setId(++sequence);   // member 객체의 id에 시퀀스를 1증가시켜 저장
-        store.put(post.getId(), post);
+        store.put(++sequence, post);
         // Map<Long, Member>타입의 Long자리에 1증가시켰던 시퀀스를,
         // Member자리에 member객체를 저장한다. (1증가된 시퀀스와, 원래 있던 이름이 있음)
 

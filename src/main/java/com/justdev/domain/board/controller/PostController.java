@@ -1,9 +1,10 @@
-package com.justdev.board.controller;
+package com.justdev.domain.board.controller;
 
-import com.justdev.board.PostRequest;
-import com.justdev.board.service.PostService;
-import com.justdev.board.config.response.ApiResponse;
-import com.justdev.board.entity.Post;
+import com.justdev.domain.board.PostRequest;
+import com.justdev.domain.board.dto.patch.UpdateRequest;
+import com.justdev.domain.board.service.PostService;
+import com.justdev.config.response.ApiResponse;
+import com.justdev.entity.Post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -54,5 +55,15 @@ public class PostController {
     public ApiResponse<Long> removePost(@PathVariable Long id) {
         Long deleteId = postService.deleteOne(id);
         return new ApiResponse(deleteId);
+    }
+
+    /**
+     * 게시글 수정
+     */
+    @PatchMapping("/{id}")
+    public ApiResponse<Long> updatePost(@PathVariable Long id,
+                                        @RequestBody UpdateRequest request) {
+        Long updateId = postService.updateOne(id, request);
+        return new ApiResponse(updateId);
     }
 }

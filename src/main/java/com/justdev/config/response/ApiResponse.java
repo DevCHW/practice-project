@@ -1,11 +1,9 @@
-package com.justdev.board.config.response;
+package com.justdev.config.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import static com.justdev.board.config.response.BaseResponseStatus.SUCCESS;
 
 @Getter
 @AllArgsConstructor
@@ -19,9 +17,9 @@ public class ApiResponse<T> {
 
     // 요청에 성공한 경우
     public ApiResponse(T result) {
-        this.success = SUCCESS.isSuccess();
-        this.message = SUCCESS.getMessage();
-        this.status = SUCCESS.getStatus();
+        this.success = BaseResponseStatus.SUCCESS.isSuccess();
+        this.message = BaseResponseStatus.SUCCESS.getMessage();
+        this.status = BaseResponseStatus.SUCCESS.getStatus();
         this.data = result;
     }
 
